@@ -3,6 +3,9 @@ const username = "em-qr";
 const repoList = document.querySelector(".repo-list");
 const repoInformation = document.querySelector(".repos");
 const individualRepoData = document.querySelector(".repo-data");
+const backToRepoButton = document.querySelector(".view-repos");
+const filterInput = document.querySelector(".filter-repos");
+
 
 const fetchInfo = async function () {
     const response = await fetch(`https://api.github.com/users/${username}`);
@@ -41,6 +44,7 @@ const fetchRepoList = async function () {
 
 
 const displayInfo = function (repos) {
+    filterInput.classList.remove("hide");
     for (const repo of repos) {
     const repoItem = document.createElement("li");
     repoItem.classList.add("repo");
@@ -79,6 +83,7 @@ const specificRepoInfo = async function (repoName) {
 
 
 const specificRepoDisplay = function (repoInfo, languages){
+    backToRepoButton.classList.add("hide");
     individualRepoData.innerHTML = "";
     const div = document.createElement("div");
     individualRepoData.classList.remove("hide");
@@ -93,3 +98,24 @@ const specificRepoDisplay = function (repoInfo, languages){
      individualRepoData.append(div);
 
     };
+
+    backToRepoButton.addEventListener("click" , function () {
+      repoInformation.classList.remove("hide");
+      individualRepoData.classList.add("hide");
+      backToRepoButton.classList.add("hide");
+    });
+
+    filterInput.addEventListener("input" , function(e) {
+      const searchText = e.target.value;
+      const repos = document.querySelectorAll(".repo");
+      const lowerCase = searchText.toLowerCase();
+
+      for (const repo of repos) {
+        const repoLowerCase = repo.innerText.toLowerCase();
+        if ( repoLowerCase.includes(lowerCase)){
+            repo.classList.remove("hide");
+        }  else {
+            repo.classList.add("hide");
+      }
+    }
+});
